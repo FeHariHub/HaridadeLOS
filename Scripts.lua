@@ -1,6 +1,6 @@
 --> Jogos
 local games = {
-  [3101667897] = "/LT2/main.lua"
+  [3101667897] = "https://raw.githubusercontent.com/FeHari/HaridadeLOS/main/HaridadeTrial.lua"
 }
 
 local gameUrl = games[game.PlaceId]
