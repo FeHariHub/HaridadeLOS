@@ -142,53 +142,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
---Anti AFK
-local function = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-   wait(1)
-   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-end)
-
-  --Delete Barriers
-
-function deleteBarrier()
-    spawn(function()
-        for i, v in pairs(game:GetService("Workspace").raceMaps.Grassland.boundaryParts:GetChildren()) do
-            v:Destroy()
-        end
-
-        for i, v in pairs(game:GetService("Workspace").raceMaps.Desert.boundaryParts:GetChildren()) do
-            v:Destroy()
-        end
-
-        for i, v in pairs(game:GetService("Workspace").raceMaps.Magma.boundaryParts:GetChildren()) do
-            v:Destroy()
-        end
-    end)
-end
-
-  --Change Speed and Jump Height
-function setSpeed(ws)
-    spawn(function()    
-        while task.wait() do
-            if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = ws
-            end
-        end
-    end)
-end
-
-function setJump(jp)
-    spawn(function()
-        while task.wait() do
-            if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                game.Players.LocalPlayer.Character.Humanoid.JumpPower = jp
-            end
-        end
-    end)
-end
-
 -- Função para alternar o estado de AutoRaces
 local function ToggleAutoRaces(Value)
     AutoRaces = Value
@@ -243,6 +196,36 @@ local function optimizeFpsPing()
     end
 end
 
+local function setWalkSpeed(input)
+    LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = input
+end
+
+local function setJumpPower(input)
+    local Humanoid = LocalPlayer.Character:WaitForChild("Humanoid")
+    Humanoid.UseJumpPower = true
+    Humanoid.JumpPower = input
+end
+
+local function teleportToPlayer(input)
+    for _, player in pairs(Players:GetPlayers()) do
+        if input == string.sub(player.Name, 1, #input) then
+            LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, -1)
+            print("Teleportado para: " .. player.Name)
+            return -- Para sair após o teletransporte
+        end
+    end
+    print("Jogador não encontrado: " .. input)
+end
+
+local function AntiKick()
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+        vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+        wait(1)
+        vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    end)
+end
+
 
 
 local function SelectCity(City)
@@ -272,9 +255,54 @@ local FarmTab = FarmTab:AddSection({
 	Name = "Utilitários"
 })
 
+Tab:AddSlider({
+    Name = "Velocidade Do Personagem",
+    Min = 0,
+    Max = 200, -- Ajuste o máximo conforme necessário
+    Default = 100, -- Valor padrão para a velocidade de caminhada
+    Color = Color3.fromRGB(255, 0, 0),
+    Increment = 1,
+    ValueName = "Alterar Velocidade",
+    Callback = function(input)
+        setWalkSpeed(input)
+        print("A velocidade de caminhada foi ajustada para: " .. input)
+    end    
+})
+
+Tab:AddTextbox({
+    Name = "Pulo Do Personagem",
+    Default = "157", -- Um valor padrão para o salto
+    TextDisappear = true,
+    Callback = function(Value)
+        local jumpPowerValue = tonumber(Value) -- Converte o valor para número
+        if jumpPowerValue then
+            setJumpPower(jumpPowerValue)
+            print("O Pulo foi ajustado para: " .. jumpPowerValue)
+        else
+            print("Por favor, insira um número válido.")
+        end
+    end	  
+})
+
+Tab:AddTextbox({
+    Name = "Insira O Nome Do Jogador (real)",
+    Default = "Insira",
+    TextDisappear = true,
+    Callback = function(Value)
+        teleportToPlayer(Value)
+    end	  
+})
+
+Tab:AddButton({
+    Name = "Anti-Kick",
+    Callback = function()
+        AntiKick()
+        print("O script AntiKick foi ativado.")
+    end    
+})
 
 FarmTab:AddButton({
-    Name = "Diminuir Os Gráficos Do Jogo",
+    Name = "Reduzir Os Gráficos Do Jogo",
     Default = false,
     Callback = function(value)
 	    print("button pressed")	  
@@ -287,33 +315,6 @@ FarmTab:AddButton({
         end
     end    
 })
-
-Tab:AddSlider({
-	Name = "Velocidade",
-	Min = 150,
-	Max = 10000,
-	Default = 1000,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "ws",
-	Callback = function(Value)
-		setSpeed(Value)
-	end         
-})
-
-Tab:AddSlider({
-	Name = "Pulo Do Personagem,
-	Min = 50,
-	Max = 1500,
-	Default = 200,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "jp",
-	Callback = function(Value)
-		setJump(Value)
-	end    
-})
-
 
 local FarmTab = Window:MakeTab({
 	Name = "Teleportar",
@@ -340,120 +341,6 @@ local FarmTab = Window:MakeTab({
 	Name = "Farmar",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
-})
-
-local Section = FarmTab:AddSection({
-	Name = "Farmar Automático"
-})
-
-
-FarmTab:AddDropdown({
-	Name = "Áreas Para Farmar",
-	Default = nil,
-	Options = {"Main City", "Snow City", "Magma City", "Legends Highway"},
-	Callback = function(Value)
-		AreaToFarm = Value
-    if AreaToFarm == "Main City" then 
-        getgenv().MainCity = true
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        CityFarm()
-    elseif AreaToFarm == "Snow City" then
-        getgenv().MainCity = false
-        getgenv().Snow = true
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        SnowFarm()
-    elseif AreaToFarm == "Magma City" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = true
-        getgenv().LegendsHighway = false
-        MagmaFarm()
-    elseif AreaToFarm == "Legends Highway" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = true
-        LegendsHighwayFarm()
-    end
-end    
-})
-
-FarmTab:AddDropdown({
-	Name = "Selecione a Orb",
-	Default = nil,
-	Options = {"Yellow Orb", "Orange Orb", "Blue Orb", "Red Orb", "Gemas"},
-	Callback = function(Value)
-		AreaToFarm = Value
-    if AreaToFarm == "Main City" then 
-        getgenv().MainCity = true
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        CityFarm()
-    elseif AreaToFarm == "Snow City" then
-        getgenv().MainCity = false
-        getgenv().Snow = true
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        SnowFarm()
-    elseif AreaToFarm == "Magma City" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = true
-        getgenv().LegendsHighway = false
-        MagmaFarm()
-    elseif AreaToFarm == "Legends Highway" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = true
-        LegendsHighwayFarm()
-    end
-end    
-})
-
-FarmTab:AddDropdown({
-	Name = "Selecine a Velocidade",
-	Default = nil,
-	Options = {"x50", "x75", "x100", "x125", "x150", "x175", "x200", "x250", "x300"},
-	Callback = function(Value)
-		AreaToFarm = Value
-    if AreaToFarm == "Main City" then 
-        getgenv().MainCity = true
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        CityFarm()
-    elseif AreaToFarm == "Snow City" then
-        getgenv().MainCity = false
-        getgenv().Snow = true
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        SnowFarm()
-    elseif AreaToFarm == "Magma City" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = true
-        getgenv().LegendsHighway = false
-        MagmaFarm()
-    elseif AreaToFarm == "Legends Highway" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = true
-        LegendsHighwayFarm()
-    end
-end    
-})
-
-FarmTab:AddToggle({
-	Name = "Ativar Farm",
-	Callback = function()
-        game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
-  	end    
 })
 
 local Section = FarmTab:AddSection({
@@ -526,27 +413,24 @@ FarmTab:AddToggle({
     end    
 })
 
-FarmTab:AddToggle({
-    Name = "Bloquear Corridas (permanente)", -- Nome exibido para o botão
+FarmTab:AddButton({
+    Name = "Bloquear Corridas (permamente)", -- Nome exibido para o botão
     Default = false,
     Callback = function(Value)
-        -- ToggleAutoRacesSolo block race (CRXM_CRXM)
+        -- Chama a função ToggleAutoRacesSolo com o valor desejado
         ToggleAutoRacesSolo(Value) -- Aqui você define o valor que deseja passar
     end    
 })
 
-Tab:AddButton({
-	Name = "Remover As Barreiras Das Corridas",
-	Callback = function()
-      	deleteBarrier()
-  	end    
-})
-  
-  
+
 local FarmTab = Window:MakeTab({
 	Name = "Créditos",
 	Icon = "rbxassetid://96062201354965",
 	PremiumOnly = false
+})
+
+local Section = FarmTab:AddSection({
+	Name = "Logo Mais!"
 })
 
 HaridadeLib:MakeNotification({
@@ -556,13 +440,6 @@ HaridadeLib:MakeNotification({
 	Time = 20
 })
 
-HaridadeLib:MakeNotification({
-	Name = "VERSÃO TESTE",
-	Content = "Está é uma versão teste do script!",
-	Image = "rbxassetid://114376238948933",
-	Time = 20
-})
-  
 HaridadeLib:MakeNotification({
 	Name = "BYPASS ANTI-DETECTAÇÃO",
 	Content = "ByPass Ativo... ✅",
