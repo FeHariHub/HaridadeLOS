@@ -196,36 +196,6 @@ local function optimizeFpsPing()
     end
 end
 
-local function setWalkSpeed(input)
-    LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = input
-end
-
-local function setJumpPower(input)
-    local Humanoid = LocalPlayer.Character:WaitForChild("Humanoid")
-    Humanoid.UseJumpPower = true
-    Humanoid.JumpPower = input
-end
-
-local function teleportToPlayer(input)
-    for _, player in pairs(Players:GetPlayers()) do
-        if input == string.sub(player.Name, 1, #input) then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 0, -1)
-            print("Teleportado para: " .. player.Name)
-            return -- Para sair após o teletransporte
-        end
-    end
-    print("Jogador não encontrado: " .. input)
-end
-
-local function AntiKick()
-    local vu = game:GetService("VirtualUser")
-    game:GetService("Players").LocalPlayer.Idled:Connect(function()
-        vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-        wait(1)
-        vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-    end)
-end
-
 
 
 local function SelectCity(City)
@@ -255,54 +225,9 @@ local FarmTab = FarmTab:AddSection({
 	Name = "Utilitários"
 })
 
-Tab:AddSlider({
-    Name = "Velocidade Do Personagem",
-    Min = 0,
-    Max = 200, -- Ajuste o máximo conforme necessário
-    Default = 100, -- Valor padrão para a velocidade de caminhada
-    Color = Color3.fromRGB(255, 0, 0),
-    Increment = 1,
-    ValueName = "Alterar Velocidade",
-    Callback = function(input)
-        setWalkSpeed(input)
-        print("A velocidade de caminhada foi ajustada para: " .. input)
-    end    
-})
-
-Tab:AddTextbox({
-    Name = "Pulo Do Personagem",
-    Default = "157", -- Um valor padrão para o salto
-    TextDisappear = true,
-    Callback = function(Value)
-        local jumpPowerValue = tonumber(Value) -- Converte o valor para número
-        if jumpPowerValue then
-            setJumpPower(jumpPowerValue)
-            print("O Pulo foi ajustado para: " .. jumpPowerValue)
-        else
-            print("Por favor, insira um número válido.")
-        end
-    end	  
-})
-
-Tab:AddTextbox({
-    Name = "Insira O Nome Do Jogador (real)",
-    Default = "Insira",
-    TextDisappear = true,
-    Callback = function(Value)
-        teleportToPlayer(Value)
-    end	  
-})
-
-Tab:AddButton({
-    Name = "Anti-Kick",
-    Callback = function()
-        AntiKick()
-        print("O script AntiKick foi ativado.")
-    end    
-})
 
 FarmTab:AddButton({
-    Name = "Reduzir Os Gráficos Do Jogo",
+    Name = "Diminuir Os Gráficos Do Jogo",
     Default = false,
     Callback = function(value)
 	    print("button pressed")	  
@@ -315,6 +240,20 @@ FarmTab:AddButton({
         end
     end    
 })
+
+FarmTab:AddSlider({
+    Name = "Velocidade Do Personagem",  -- Nome exibido na interface para o slider
+    Min = 10000,                          -- Valor mínimo do slider
+    Max = 10000,                       -- Valor máximo do slider
+    Default = 16,                      -- Valor padrão inicial do slider
+    Color = Color3.fromRGB(255, 255, 255),  -- Cor do slider
+    Increment = 10,                    -- Incremento do slider
+    ValueName = "Velocidade (fixo)",           -- Nome exibido ao lado do valor
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    end    
+})
+
 
 local FarmTab = Window:MakeTab({
 	Name = "Teleportar",
@@ -341,6 +280,144 @@ local FarmTab = Window:MakeTab({
 	Name = "Farmar",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
+})
+
+local Section = FarmTab:AddSection({
+	Name = "Farmar Automático"
+})
+
+
+FarmTab:AddDropdown({
+	Name = "Áreas Para Farmar",
+	Default = nil,
+	Options = {"Main City", "Snow City", "Magma City", "Legends Highway"},
+	Callback = function(Value)
+		AreaToFarm = Value
+    if AreaToFarm == "Main City" then 
+        getgenv().MainCity = true
+        getgenv().Snow = false
+        getgenv().Magma = false
+        getgenv().LegendsHighway = false
+        CityFarm()
+    elseif AreaToFarm == "Snow City" then
+        getgenv().MainCity = false
+        getgenv().Snow = true
+        getgenv().Magma = false
+        getgenv().LegendsHighway = false
+        SnowFarm()
+    elseif AreaToFarm == "Magma City" then
+        getgenv().MainCity = false
+        getgenv().Snow = false
+        getgenv().Magma = true
+        getgenv().LegendsHighway = false
+        MagmaFarm()
+    elseif AreaToFarm == "Legends Highway" then
+        getgenv().MainCity = false
+        getgenv().Snow = false
+        getgenv().Magma = false
+        getgenv().LegendsHighway = true
+        LegendsHighwayFarm()
+    end
+end    
+})
+
+FarmTab:AddDropdown({
+	Name = "Selecione a Orb",
+	Default = nil,
+	Options = {"Yellow Orb", "Orange Orb", "Blue Orb", "Red Orb", "Gemas"},
+	Callback = function(Value)
+		AreaToFarm = Value
+    if AreaToFarm == "Main City" then 
+        getgenv().MainCity = true
+        getgenv().Snow = false
+        getgenv().Magma = false
+        getgenv().LegendsHighway = false
+        CityFarm()
+    elseif AreaToFarm == "Snow City" then
+        getgenv().MainCity = false
+        getgenv().Snow = true
+        getgenv().Magma = false
+        getgenv().LegendsHighway = false
+        SnowFarm()
+    elseif AreaToFarm == "Magma City" then
+        getgenv().MainCity = false
+        getgenv().Snow = false
+        getgenv().Magma = true
+        getgenv().LegendsHighway = false
+        MagmaFarm()
+    elseif AreaToFarm == "Legends Highway" then
+        getgenv().MainCity = false
+        getgenv().Snow = false
+        getgenv().Magma = false
+        getgenv().LegendsHighway = true
+        LegendsHighwayFarm()
+    end
+end    
+})
+
+FarmTab:AddDropdown({
+	Name = "Selecine a Velocidade",
+	Default = nil,
+	Options = {"x50", "x75", "x100", "x125", "x150", "x175", "x200", "x250", "x300"},
+	Callback = function(Value)
+		AreaToFarm = Value
+    if AreaToFarm == "Main City" then 
+        getgenv().MainCity = true
+        getgenv().Snow = false
+        getgenv().Magma = false
+        getgenv().LegendsHighway = false
+        CityFarm()
+    elseif AreaToFarm == "Snow City" then
+        getgenv().MainCity = false
+        getgenv().Snow = true
+        getgenv().Magma = false
+        getgenv().LegendsHighway = false
+        SnowFarm()
+    elseif AreaToFarm == "Magma City" then
+        getgenv().MainCity = false
+        getgenv().Snow = false
+        getgenv().Magma = true
+        getgenv().LegendsHighway = false
+        MagmaFarm()
+    elseif AreaToFarm == "Legends Highway" then
+        getgenv().MainCity = false
+        getgenv().Snow = false
+        getgenv().Magma = false
+        getgenv().LegendsHighway = true
+        LegendsHighwayFarm()
+    end
+end    
+})
+
+FarmTab:AddToggle({
+	Name = "Diminuir o Ping (não faz milagre)",
+	Default = false,
+	Callback = function(Value)
+		getgenv().Hoop = Value
+        while Hoop do
+            HoopFarm()
+            task.wait()
+        end
+	end    
+})
+
+FarmTab:AddToggle({
+	Name = "Farmar Orbs (BETA)",
+	Default = false,
+	Callback = function(Value)
+    Autofarm = Value
+    if Value then
+        if AreaToFarm == "Main City" then
+            CityFarm()
+        elseif AreaToFarm == "Snow City" then
+            SnowFarm()
+        elseif AreaToFarm == "Magma City" then
+            MagmaFarm()
+        elseif AreaToFarm == "Legends Highway" then
+            LegendsHighwayFarm()
+        end
+    end 
+end
 })
 
 local Section = FarmTab:AddSection({
@@ -424,13 +501,45 @@ FarmTab:AddButton({
 
 
 local FarmTab = Window:MakeTab({
-	Name = "Créditos",
-	Icon = "rbxassetid://96062201354965",
+	Name = "Comprar Pets",
+	Icon = "rbxassetid://95145057413711",
 	PremiumOnly = false
 })
 
 local Section = FarmTab:AddSection({
-	Name = "Logo Mais!"
+	Name = "Comprar Pets Automáticamente"
+})
+
+local Crystal1
+
+FarmTab:AddDropdown({
+	Name = "Escolha O Cristal",
+	Default = nil,
+	Options = Crystals,
+	Callback = function(Value)
+        Crystal1 = Value
+	end    
+})
+
+FarmTab:AddToggle({
+	Name = "Comprar Pets Automáticamente (necessita de gemas)",
+	Default = false,
+	Callback = function(Value)
+        getgenv().OpenEgg = Value
+        while getgenv().OpenEgg do
+            if Crystal1 then
+                Egg(Crystal1)  
+            end
+            task.wait()
+        end
+	end    
+})
+
+
+local FarmTab = Window:MakeTab({
+	Name = "Créditos",
+	Icon = "rbxassetid://96062201354965",
+	PremiumOnly = false
 })
 
 HaridadeLib:MakeNotification({
