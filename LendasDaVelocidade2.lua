@@ -221,6 +221,47 @@ local function AntiKick()
     end)
 end
 
+local isFarming = false  -- Variável para controlar o estado do farm
+
+local function collectYellowOrb()
+    spawn(function()
+        while wait() do
+            if not isFarming then break end
+            if w.flags.YoCity then
+                for _ = 1, 50 do
+                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "City")
+                end
+            end
+        end
+    end)
+end
+
+local function collectRedOrb()
+    spawn(function()
+        while wait() do
+            if not isFarming then break end
+            if w.flags.RoCity then
+                for _ = 1, 50 do
+                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "City")
+                end
+            end
+        end
+    end)
+end
+
+local function collectGem()
+    spawn(function()
+        while wait() do
+            if not isFarming then break end
+            if w.flags.GCity then
+                for _ = 1, 50 do
+                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", "Gem", "City")
+                end
+            end
+        end
+    end)
+end
+
 
 
 local function SelectCity(City)
@@ -328,6 +369,51 @@ FarmTab:AddToggle({
             task.wait()
         end
 	end    
+})
+
+FarmTab:AddDropdown({ 
+    Name = "Selecionar Velocidade",
+    Default = "x50",
+    Options = {"x1", "x50"},
+    Callback = function(Value)
+        print("Velocidade selecionada: " .. Value)
+        -- Configure a velocidade aqui, se necessário
+    end    
+})
+
+FarmTab:AddDropdown({ 
+    Name = "Selecionar Tipo de Orb",
+    Default = "Yellow Orb",
+    Options = {"Yellow Orb", "Red Orb", "Gem"},
+    Callback = function(Value)
+        print("Orb selecionada: " .. Value)
+        if Value == "Yellow Orb" then
+            collectYellowOrb()
+        elseif Value == "Red Orb" then
+            collectRedOrb()
+        elseif Value == "Gem" then
+            collectGem()
+        end
+    end    
+})
+
+FarmTab:AddDropdown({ 
+    Name = "Selecionar Mapa",
+    Default = "City",
+    Options = {"City"},
+    Callback = function(Value)
+        print("Mapa selecionado: " .. Value)
+        -- Aqui você pode adicionar lógica se houver mais mapas
+    end    
+})
+
+FarmTab:AddToggle({
+    Name = "Ativar Farm",
+    Default = false,
+    Callback = function(Value)
+        isFarming = Value
+        print("Farm ativado: " .. tostring(Value))
+    end    
 })
 
 
