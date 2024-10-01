@@ -196,6 +196,31 @@ local function optimizeFpsPing()
     end
 end
 
+local function deleteBarrier()
+    spawn(function()
+        local boundaries = {
+            game:GetService("Workspace").raceMaps.Grassland.boundaryParts,
+            game:GetService("Workspace").raceMaps.Desert.boundaryParts,
+            game:GetService("Workspace").raceMaps.Magma.boundaryParts
+        }
+        
+        for _, boundary in ipairs(boundaries) do
+            for _, part in pairs(boundary:GetChildren()) do
+                part:Destroy()
+            end
+        end
+    end)
+end
+
+local function AntiKick()
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+        vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+        wait(1)
+        vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    end)
+end
+
 
 
 local function SelectCity(City)
@@ -210,13 +235,13 @@ local function SelectCity(City)
     end
 end
 
---// Haridade Script \\--
-local HaridadeLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/FeHari/HaridadeScript/main/LegendsOfSpeed.lua')))()
-local Window = HaridadeLib:MakeWindow({Name = "Haridade | Legends Of Speed ⚡", HidePremium = false, SaveConfig = true, ConfigFolder = "HaridadeTest"})
+--// FeHari Hub \\--
+local HaridadeLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/FeHariHub/FH/refs/heads/main/InterfaceUI2.lua')))()
+local Window = HaridadeLib:MakeWindow({Name = "FeHari Hub | Lendas Da Velocidade ⚡", HidePremium = false, SaveConfig = true, ConfigFolder = "HaridadeTest"})
 
 local FarmTab = Window:MakeTab({
 	Name = "Início",
-	Icon = "rbxassetid://112625488111718",
+	Icon = "rbxassetid://100789040568622",
 	PremiumOnly = false
 })
 
@@ -227,7 +252,15 @@ local FarmTab = FarmTab:AddSection({
 
 
 FarmTab:AddButton({
-    Name = "Diminuir Os Gráficos Do Jogo",
+    Name = "Anti-Kick",
+    Callback = function()
+        AntiKick()
+        print("O script AntiKick foi ativado.")
+    end    
+})
+
+FarmTab:AddButton({
+    Name = "Reduzir Os Gráficos Do Jogo",
     Default = false,
     Callback = function(value)
 	    print("button pressed")	  
@@ -241,23 +274,10 @@ FarmTab:AddButton({
     end    
 })
 
-FarmTab:AddSlider({
-    Name = "Velocidade Do Personagem",  -- Nome exibido na interface para o slider
-    Min = 10000,                          -- Valor mínimo do slider
-    Max = 10000,                       -- Valor máximo do slider
-    Default = 16,                      -- Valor padrão inicial do slider
-    Color = Color3.fromRGB(255, 255, 255),  -- Cor do slider
-    Increment = 10,                    -- Incremento do slider
-    ValueName = "Velocidade (fixo)",           -- Nome exibido ao lado do valor
-    Callback = function(Value)
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-    end    
-})
-
 
 local FarmTab = Window:MakeTab({
 	Name = "Teleportar",
-	Icon = "rbxassetid://109334924659404",
+	Icon = "rbxassetid://103168823763561",
 	PremiumOnly = false
 })
 
@@ -267,7 +287,7 @@ local Section = FarmTab:AddSection({
 
 
 FarmTab:AddDropdown({
-	Name = "Selecionar Cidade Para Teleportar",
+	Name = "Selecionar Área Para Teleportar",
 	Default = nil,
 	Options = {"Main City", "Snow City", "Magma City", "Legends Highway"},
 	Callback = function(Value)
@@ -278,146 +298,8 @@ FarmTab:AddDropdown({
 
 local FarmTab = Window:MakeTab({
 	Name = "Farmar",
-	Icon = "rbxassetid://4483345998",
+	Icon = "rbxassetid://78744214847458",
 	PremiumOnly = false
-})
-
-local Section = FarmTab:AddSection({
-	Name = "Farmar Automático"
-})
-
-
-FarmTab:AddDropdown({
-	Name = "Áreas Para Farmar",
-	Default = nil,
-	Options = {"Main City", "Snow City", "Magma City", "Legends Highway"},
-	Callback = function(Value)
-		AreaToFarm = Value
-    if AreaToFarm == "Main City" then 
-        getgenv().MainCity = true
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        CityFarm()
-    elseif AreaToFarm == "Snow City" then
-        getgenv().MainCity = false
-        getgenv().Snow = true
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        SnowFarm()
-    elseif AreaToFarm == "Magma City" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = true
-        getgenv().LegendsHighway = false
-        MagmaFarm()
-    elseif AreaToFarm == "Legends Highway" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = true
-        LegendsHighwayFarm()
-    end
-end    
-})
-
-FarmTab:AddDropdown({
-	Name = "Selecione a Orb",
-	Default = nil,
-	Options = {"Yellow Orb", "Orange Orb", "Blue Orb", "Red Orb", "Gemas"},
-	Callback = function(Value)
-		AreaToFarm = Value
-    if AreaToFarm == "Main City" then 
-        getgenv().MainCity = true
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        CityFarm()
-    elseif AreaToFarm == "Snow City" then
-        getgenv().MainCity = false
-        getgenv().Snow = true
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        SnowFarm()
-    elseif AreaToFarm == "Magma City" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = true
-        getgenv().LegendsHighway = false
-        MagmaFarm()
-    elseif AreaToFarm == "Legends Highway" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = true
-        LegendsHighwayFarm()
-    end
-end    
-})
-
-FarmTab:AddDropdown({
-	Name = "Selecine a Velocidade",
-	Default = nil,
-	Options = {"x50", "x75", "x100", "x125", "x150", "x175", "x200", "x250", "x300"},
-	Callback = function(Value)
-		AreaToFarm = Value
-    if AreaToFarm == "Main City" then 
-        getgenv().MainCity = true
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        CityFarm()
-    elseif AreaToFarm == "Snow City" then
-        getgenv().MainCity = false
-        getgenv().Snow = true
-        getgenv().Magma = false
-        getgenv().LegendsHighway = false
-        SnowFarm()
-    elseif AreaToFarm == "Magma City" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = true
-        getgenv().LegendsHighway = false
-        MagmaFarm()
-    elseif AreaToFarm == "Legends Highway" then
-        getgenv().MainCity = false
-        getgenv().Snow = false
-        getgenv().Magma = false
-        getgenv().LegendsHighway = true
-        LegendsHighwayFarm()
-    end
-end    
-})
-
-FarmTab:AddToggle({
-	Name = "Diminuir o Ping (não faz milagre)",
-	Default = false,
-	Callback = function(Value)
-		getgenv().Hoop = Value
-        while Hoop do
-            HoopFarm()
-            task.wait()
-        end
-	end    
-})
-
-FarmTab:AddToggle({
-	Name = "Farmar Orbs (BETA)",
-	Default = false,
-	Callback = function(Value)
-    Autofarm = Value
-    if Value then
-        if AreaToFarm == "Main City" then
-            CityFarm()
-        elseif AreaToFarm == "Snow City" then
-            SnowFarm()
-        elseif AreaToFarm == "Magma City" then
-            MagmaFarm()
-        elseif AreaToFarm == "Legends Highway" then
-            LegendsHighwayFarm()
-        end
-    end 
-end
 })
 
 local Section = FarmTab:AddSection({
@@ -450,18 +332,18 @@ FarmTab:AddToggle({
 
 
 local FarmTab = Window:MakeTab({
-	Name = "Renascimento",
-	Icon = "rbxassetid://121663556703347",
+	Name = "Renascimentos",
+	Icon = "rbxassetid://124658295933505",
 	PremiumOnly = false
 })
 
 local Section = FarmTab:AddSection({
-	Name = "Auto Renascimento"
+	Name = "Renascimentos Automáticos"
 })
 
 
 FarmTab:AddToggle({
-	Name = "Auto Renascimento (ative apenas se for renascer AFK)",
+	Name = "Auto Renascimento (ative apenas se for renascer)",
 	Default = false,
 	Callback = function(Value)
 		getgenv().AutoRebirth = Value
@@ -473,8 +355,8 @@ FarmTab:AddToggle({
 })
 
 local FarmTab = Window:MakeTab({
-	Name = "Auto Corridas",
-	Icon = "rbxassetid://72430981170529",
+	Name = "Corridas",
+	Icon = "rbxassetid://97860628277392",
 	PremiumOnly = false
 })
 
@@ -483,58 +365,20 @@ local Section = FarmTab:AddSection({
 })
 
 FarmTab:AddToggle({
-    Name = "Auto Corridas",
+    Name = "Corridas Automáticas",
     Default = false,
     Callback = function(Value)
         ToggleAutoRaces(Value)
     end    
 })
 
-FarmTab:AddButton({
-    Name = "Bloquear Corridas (permamente)", -- Nome exibido para o botão
+FarmTab:AddToggle({
+    Name = "Bloquear Corridas (V-BETA)",
     Default = false,
     Callback = function(Value)
-        -- Chama a função ToggleAutoRacesSolo com o valor desejado
-        ToggleAutoRacesSolo(Value) -- Aqui você define o valor que deseja passar
+        ToggleAutoRacesSolo(Value)
     end    
 })
-
-
-local FarmTab = Window:MakeTab({
-	Name = "Comprar Pets",
-	Icon = "rbxassetid://95145057413711",
-	PremiumOnly = false
-})
-
-local Section = FarmTab:AddSection({
-	Name = "Comprar Pets Automáticamente"
-})
-
-local Crystal1
-
-FarmTab:AddDropdown({
-	Name = "Escolha O Cristal",
-	Default = nil,
-	Options = Crystals,
-	Callback = function(Value)
-        Crystal1 = Value
-	end    
-})
-
-FarmTab:AddToggle({
-	Name = "Comprar Pets Automáticamente (necessita de gemas)",
-	Default = false,
-	Callback = function(Value)
-        getgenv().OpenEgg = Value
-        while getgenv().OpenEgg do
-            if Crystal1 then
-                Egg(Crystal1)  
-            end
-            task.wait()
-        end
-	end    
-})
-
 
 local FarmTab = Window:MakeTab({
 	Name = "Créditos",
@@ -542,8 +386,19 @@ local FarmTab = Window:MakeTab({
 	PremiumOnly = false
 })
 
+local Section = FarmTab:AddSection({
+	Name = "V-BETA | FeHari Hub Trial Apenas Para Corridas!"
+})
+
 HaridadeLib:MakeNotification({
-	Name = "Haridade Community",
+	Name = "Atenção!",
+	Content = "Esta É Uma Versão Teste Do FeHari Hub!",
+	Image = "rbxassetid://114376238948933",
+	Time = 22
+})
+
+HaridadeLib:MakeNotification({
+	Name = "FEHARI HUB",
 	Content = "discord.gg/uydz6pZWMk",
 	Image = "rbxassetid://101951842185056",
 	Time = 20
@@ -551,9 +406,9 @@ HaridadeLib:MakeNotification({
 
 HaridadeLib:MakeNotification({
 	Name = "BYPASS ANTI-DETECTAÇÃO",
-	Content = "ByPass Ativo... ✅",
+	Content = "Bypass Ativo! ✅",
 	Image = "rbxassetid://71506531582407",
-	Time = 20
+	Time = 18
 })
 
 HaridadeLib:Init()
