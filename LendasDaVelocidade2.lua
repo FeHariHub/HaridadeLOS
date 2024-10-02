@@ -221,47 +221,6 @@ local function AntiKick()
     end)
 end
 
-local isFarming = false  -- Variável para controlar o estado do farm
-
-local function collectYellowOrb()
-    spawn(function()
-        while wait() do
-            if not isFarming then break end
-            if w.flags.YoCity then
-                for _ = 1, 50 do
-                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "City")
-                end
-            end
-        end
-    end)
-end
-
-local function collectRedOrb()
-    spawn(function()
-        while wait() do
-            if not isFarming then break end
-            if w.flags.RoCity then
-                for _ = 1, 50 do
-                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "City")
-                end
-            end
-        end
-    end)
-end
-
-local function collectGem()
-    spawn(function()
-        while wait() do
-            if not isFarming then break end
-            if w.flags.GCity then
-                for _ = 1, 50 do
-                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", "Gem", "City")
-                end
-            end
-        end
-    end)
-end
-
 
 
 local function SelectCity(City)
