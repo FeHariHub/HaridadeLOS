@@ -1,6 +1,6 @@
 --> Jogos
 local games = {
-  [3101667897] = "https://raw.githubusercontent.com/FeHari/HaridadeLOS/main/HaridadeTrial.lua"
+  [3101667897] = "https://raw.githubusercontent.com/FeHariHub/HaridadeLOS/main/LendasDaVelocidade2.lua"
 }
 
 local gameUrl = games[game.PlaceId]
@@ -11,4 +11,4 @@ if (not gameUrl) then
 end
 
 --> Carregar Script!
-loadstring(game:HttpGet("https://raw.githubusercontent.com/FeHari/HaridadeLOS/main/HaridadeTrial.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/FeHariHub/HaridadeLOS/main/LendasDaVelocidade2.lua"))()
