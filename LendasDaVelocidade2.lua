@@ -193,7 +193,7 @@ end
 
 
 
-local OrionLib = loadstring(game:HttpGet(('https://github.com/FeHariHub/HaridadeLOS/main/Scripts.lua')))()
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/FeHariHub/HaridadeLOS/main/Scripts.lua')))()
 local Window = OrionLib:MakeWindow({Name = "FeHariV7 Hub | Lendas Da Velocidade ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
 
 
