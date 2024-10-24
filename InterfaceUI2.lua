@@ -7,7 +7,7 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HttpService = game:GetService("HttpService")
 
-local FeHariHubLib = {
+local OrionLib = {
 	Elements = {},
 	ThemeObjects = {},
 	Connections = {},
@@ -35,7 +35,7 @@ local Success, Response = pcall(function()
 end)
 
 if not Success then
-	warn("\nFeHari Hub - Failed to load Feather Icons. Error code: " .. Response .. "\n")
+	warn("\nOrion Library - Failed to load Feather Icons. Error code: " .. Response .. "\n")
 end	
 
 local function GetIcon(IconName)
@@ -46,61 +46,61 @@ local function GetIcon(IconName)
 	end
 end   
 
-local FeHariHub = Instance.new("ScreenGui")
-FeHariHub.Name = "FeHariHub"
+local Orion = Instance.new("ScreenGui")
+Orion.Name = "Orion"
 if syn then
-	syn.protect_gui(FeHariHub)
-	FeHariHub.Parent = game.CoreGui
+	syn.protect_gui(Orion)
+	Orion.Parent = game.CoreGui
 else
-	FeHariHub.Parent = gethui() or game.CoreGui
+	Orion.Parent = gethui() or game.CoreGui
 end
 
 if gethui then
 	for _, Interface in ipairs(gethui():GetChildren()) do
-		if Interface.Name == FeHariHub.Name and Interface ~= FeHariHub then
+		if Interface.Name == Orion.Name and Interface ~= Orion then
 			Interface:Destroy()
 		end
 	end
 else
 	for _, Interface in ipairs(game.CoreGui:GetChildren()) do
-		if Interface.Name == FeHariHub.Name and Interface ~= FeHariHub then
+		if Interface.Name == Orion.Name and Interface ~= Orion then
 			Interface:Destroy()
 		end
 	end
 end
 
-function FeHariHubLib:IsRunning()
+function OrionLib:IsRunning()
 	if gethui then
-		return FeHariHub.Parent == gethui()
+		return Orion.Parent == gethui()
 	else
-		return FeHariHub.Parent == game:GetService("CoreGui")
+		return Orion.Parent == game:GetService("CoreGui")
 	end
 
 end
 
 local function AddConnection(Signal, Function)
-	if (not FeHariHubLib:IsRunning()) then
+	if (not OrionLib:IsRunning()) then
 		return
 	end
 	local SignalConnect = Signal:Connect(Function)
-	table.insert(FeHariHubLib.Connections, SignalConnect)
+	table.insert(OrionLib.Connections, SignalConnect)
 	return SignalConnect
 end
 
 task.spawn(function()
-	while (FeHariHubLib:IsRunning()) do
+	while (OrionLib:IsRunning()) do
 		wait()
 	end
 
-	for _, Connection in next, FeHariHubLib.Connections do
+	for _, Connection in next, OrionLib.Connections do
 		Connection:Disconnect()
 	end
 end)
 
-local function MakeDraggable(DragPoint, Main)
+local function AddDraggingFunctionality(DragPoint, Main)
 	pcall(function()
 		local Dragging, DragInput, MousePos, FramePos = false
-		AddConnection(DragPoint.InputBegan, function(Input)
+		DragPoint.InputBegan:Connect(function(Input)
 			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 				Dragging = true
 				MousePos = Input.Position
@@ -113,20 +113,19 @@ local function MakeDraggable(DragPoint, Main)
 				end)
 			end
 		end)
-		AddConnection(DragPoint.InputChanged, function(Input)
+		DragPoint.InputChanged:Connect(function(Input)
 			if Input.UserInputType == Enum.UserInputType.MouseMovement then
 				DragInput = Input
 			end
 		end)
-		AddConnection(UserInputService.InputChanged, function(Input)
+		UserInputService.InputChanged:Connect(function(Input)
 			if Input == DragInput and Dragging then
 				local Delta = Input.Position - MousePos
-				--TweenService:Create(Main, TweenInfo.new(0.05, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)}):Play()
-				Main.Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)
+				TweenService:Create(Main, TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)}):Play()
 			end
 		end)
 	end)
-end    
+end   
 
 local function Create(Name, Properties, Children)
 	local Object = Instance.new(Name)
@@ -140,13 +139,13 @@ local function Create(Name, Properties, Children)
 end
 
 local function CreateElement(ElementName, ElementFunction)
-	FeHariHubLib.Elements[ElementName] = function(...)
+	OrionLib.Elements[ElementName] = function(...)
 		return ElementFunction(...)
 	end
 end
 
 local function MakeElement(ElementName, ...)
-	local NewElement = FeHariHubLib.Elements[ElementName](...)
+	local NewElement = OrionLib.Elements[ElementName](...)
 	return NewElement
 end
 
@@ -189,18 +188,18 @@ local function ReturnProperty(Object)
 end
 
 local function AddThemeObject(Object, Type)
-	if not FeHariHubLib.ThemeObjects[Type] then
-		FeHariHubLib.ThemeObjects[Type] = {}
+	if not OrionLib.ThemeObjects[Type] then
+		OrionLib.ThemeObjects[Type] = {}
 	end    
-	table.insert(FeHariHubLib.ThemeObjects[Type], Object)
-	Object[ReturnProperty(Object)] = FeHariHubLib.Themes[FeHariHubLib.SelectedTheme][Type]
+	table.insert(OrionLib.ThemeObjects[Type], Object)
+	Object[ReturnProperty(Object)] = OrionLib.Themes[OrionLib.SelectedTheme][Type]
 	return Object
 end    
 
 local function SetTheme()
-	for Name, Type in pairs(FeHariHubLib.ThemeObjects) do
+	for Name, Type in pairs(OrionLib.ThemeObjects) do
 		for _, Object in pairs(Type) do
-			Object[ReturnProperty(Object)] = FeHariHubLib.Themes[FeHariHubLib.SelectedTheme][Name]
+			Object[ReturnProperty(Object)] = OrionLib.Themes[OrionLib.SelectedTheme][Name]
 		end    
 	end    
 end
@@ -216,23 +215,23 @@ end
 local function LoadCfg(Config)
 	local Data = HttpService:JSONDecode(Config)
 	table.foreach(Data, function(a,b)
-		if FeHariHubLib.Flags[a] then
+		if OrionLib.Flags[a] then
 			spawn(function() 
-				if FeHariHubLib.Flags[a].Type == "Colorpicker" then
-					FeHariHubLib.Flags[a]:Set(UnpackColor(b))
+				if OrionLib.Flags[a].Type == "Colorpicker" then
+					OrionLib.Flags[a]:Set(UnpackColor(b))
 				else
-					FeHariHubLib.Flags[a]:Set(b)
+					OrionLib.Flags[a]:Set(b)
 				end    
 			end)
 		else
-			warn("FeHari Hub Config Loader - Could not find ", a ,b)
+			warn("Orion Library Config Loader - Could not find ", a ,b)
 		end
 	end)
 end
 
 local function SaveCfg(Name)
 	local Data = {}
-	for i,v in pairs(FeHariHubLib.Flags) do
+	for i,v in pairs(OrionLib.Flags) do
 		if v.Save then
 			if v.Type == "Colorpicker" then
 				Data[i] = PackColor(v.Value)
@@ -241,7 +240,7 @@ local function SaveCfg(Name)
 			end
 		end	
 	end
-	writefile(FeHariHubLib.Folder .. "/" .. Name .. ".txt", tostring(HttpService:JSONEncode(Data)))
+	writefile(OrionLib.Folder .. "/" .. Name .. ".txt", tostring(HttpService:JSONEncode(Data)))
 end
 
 local WhitelistedMouse = {Enum.UserInputType.MouseButton1, Enum.UserInputType.MouseButton2,Enum.UserInputType.MouseButton3}
@@ -385,10 +384,10 @@ local NotificationHolder = SetProps(SetChildren(MakeElement("TFrame"), {
 	Position = UDim2.new(1, -25, 1, -25),
 	Size = UDim2.new(0, 300, 1, -25),
 	AnchorPoint = Vector2.new(1, 1),
-	Parent = FeHariHub
+	Parent = Orion
 })
 
-function FeHariHubLib:MakeNotification(NotificationConfig)
+function OrionLib:MakeNotification(NotificationConfig)
 	spawn(function()
 		NotificationConfig.Name = NotificationConfig.Name or "Notification"
 		NotificationConfig.Content = NotificationConfig.Content or "Test"
@@ -449,12 +448,12 @@ function FeHariHubLib:MakeNotification(NotificationConfig)
 	end)
 end    
 
-function FeHariHubLib:Init()
-	if FeHariHubLib.SaveCfg then	
+function OrionLib:Init()
+	if OrionLib.SaveCfg then	
 		pcall(function()
-			if isfile(FeHariHubLib.Folder .. "/" .. game.GameId .. ".txt") then
-				LoadCfg(readfile(FeHariHubLib.Folder .. "/" .. game.GameId .. ".txt"))
-				FeHariHubLib:MakeNotification({
+			if isfile(OrionLib.Folder .. "/" .. game.GameId .. ".txt") then
+				LoadCfg(readfile(OrionLib.Folder .. "/" .. game.GameId .. ".txt"))
+				OrionLib:MakeNotification({
 					Name = "Configuration",
 					Content = "Auto-loaded configuration for the game " .. game.GameId .. ".",
 					Time = 5
@@ -464,27 +463,27 @@ function FeHariHubLib:Init()
 	end	
 end	
 
-function FeHariHubLib:MakeWindow(WindowConfig)
+function OrionLib:MakeWindow(WindowConfig)
 	local FirstTab = true
 	local Minimized = false
 	local Loaded = false
 	local UIHidden = false
 
 	WindowConfig = WindowConfig or {}
-	WindowConfig.Name = WindowConfig.Name or "FeHari Hub"
+	WindowConfig.Name = WindowConfig.Name or "Orion Library"
 	WindowConfig.ConfigFolder = WindowConfig.ConfigFolder or WindowConfig.Name
 	WindowConfig.SaveConfig = WindowConfig.SaveConfig or false
 	WindowConfig.HidePremium = WindowConfig.HidePremium or false
 	if WindowConfig.IntroEnabled == nil then
 		WindowConfig.IntroEnabled = true
 	end
-	WindowConfig.IntroText = WindowConfig.IntroText or "FeHari Hub"
+	WindowConfig.IntroText = WindowConfig.IntroText or "Orion Library"
 	WindowConfig.CloseCallback = WindowConfig.CloseCallback or function() end
 	WindowConfig.ShowIcon = WindowConfig.ShowIcon or false
 	WindowConfig.Icon = WindowConfig.Icon or "rbxassetid://8834748103"
 	WindowConfig.IntroIcon = WindowConfig.IntroIcon or "rbxassetid://8834748103"
-	FeHariHubLib.Folder = WindowConfig.ConfigFolder
-	FeHariHubLib.SaveCfg = WindowConfig.SaveConfig
+	OrionLib.Folder = WindowConfig.ConfigFolder
+	OrionLib.SaveCfg = WindowConfig.SaveConfig
 
 	if WindowConfig.SaveConfig then
 		if not isfolder(WindowConfig.ConfigFolder) then
@@ -601,7 +600,7 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 	}), "Stroke")
 
 	local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
-		Parent = FeHariHub,
+		Parent = Orion,
 		Position = UDim2.new(0.5, -307, 0.5, -172),
 		Size = UDim2.new(0, 615, 0, 344),
 		ClipsDescendants = true
@@ -645,12 +644,12 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 		WindowIcon.Parent = MainWindow.TopBar
 	end	
 
-	MakeDraggable(DragPoint, MainWindow)
+	AddDraggingFunctionality(DragPoint, MainWindow)
 
 	AddConnection(CloseBtn.MouseButton1Up, function()
 		MainWindow.Visible = false
 		UIHidden = true
-		FeHariHubLib:MakeNotification({
+		OrionLib:MakeNotification({
 			Name = "Interface Hidden",
 			Content = "Tap RightShift to reopen the interface",
 			Time = 5
@@ -687,7 +686,7 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 	local function LoadSequence()
 		MainWindow.Visible = false
 		local LoadSequenceLogo = SetProps(MakeElement("Image", WindowConfig.IntroIcon), {
-			Parent = FeHariHub,
+			Parent = Orion,
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.new(0.5, 0, 0.4, 0),
 			Size = UDim2.new(0, 28, 0, 28),
@@ -696,7 +695,7 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 		})
 
 		local LoadSequenceText = SetProps(MakeElement("Label", WindowConfig.IntroText, 14), {
-			Parent = FeHariHub,
+			Parent = Orion,
 			Size = UDim2.new(1, 0, 1, 0),
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.new(0.5, 19, 0.5, 0),
@@ -886,22 +885,22 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 				}), "Second")
 
 				AddConnection(Click.MouseEnter, function()
-					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 				end)
 
 				AddConnection(Click.MouseLeave, function()
-					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second}):Play()
+					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
 				end)
 
 				AddConnection(Click.MouseButton1Up, function()
-					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 					spawn(function()
 						ButtonConfig.Callback()
 					end)
 				end)
 
 				AddConnection(Click.MouseButton1Down, function()
-					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 6, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 6, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 6)}):Play()
+					TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
 				end)
 
 				function Button:Set(ButtonText)
@@ -961,8 +960,8 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 
 				function Toggle:Set(Value)
 					Toggle.Value = Value
-					TweenService:Create(ToggleBox, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Toggle.Value and ToggleConfig.Color or FeHariHubLib.Themes.Default.Divider}):Play()
-					TweenService:Create(ToggleBox.Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Color = Toggle.Value and ToggleConfig.Color or FeHariHubLib.Themes.Default.Stroke}):Play()
+					TweenService:Create(ToggleBox, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Divider}):Play()
+					TweenService:Create(ToggleBox.Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Color = Toggle.Value and ToggleConfig.Color or OrionLib.Themes.Default.Stroke}):Play()
 					TweenService:Create(ToggleBox.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1, Size = Toggle.Value and UDim2.new(0, 20, 0, 20) or UDim2.new(0, 8, 0, 8)}):Play()
 					ToggleConfig.Callback(Toggle.Value)
 				end    
@@ -970,25 +969,25 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 				Toggle:Set(Toggle.Value)
 
 				AddConnection(Click.MouseEnter, function()
-					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 				end)
 
 				AddConnection(Click.MouseLeave, function()
-					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second}):Play()
+					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
 				end)
 
 				AddConnection(Click.MouseButton1Up, function()
-					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 					SaveCfg(game.GameId)
 					Toggle:Set(not Toggle.Value)
 				end)
 
 				AddConnection(Click.MouseButton1Down, function()
-					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 6, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 6, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 6)}):Play()
+					TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
 				end)
 
 				if ToggleConfig.Flag then
-					FeHariHubLib.Flags[ToggleConfig.Flag] = Toggle
+					OrionLib.Flags[ToggleConfig.Flag] = Toggle
 				end	
 				return Toggle
 			end  
@@ -1083,7 +1082,7 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 
 				Slider:Set(Slider.Value)
 				if SliderConfig.Flag then				
-					FeHariHubLib.Flags[SliderConfig.Flag] = Slider
+					OrionLib.Flags[SliderConfig.Flag] = Slider
 				end
 				return Slider
 			end  
@@ -1238,7 +1237,7 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 				Dropdown:Refresh(Dropdown.Options, false)
 				Dropdown:Set(Dropdown.Value)
 				if DropdownConfig.Flag then				
-					FeHariHubLib.Flags[DropdownConfig.Flag] = Dropdown
+					OrionLib.Flags[DropdownConfig.Flag] = Dropdown
 				end
 				return Dropdown
 			end
@@ -1336,19 +1335,19 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 				end)
 
 				AddConnection(Click.MouseEnter, function()
-					TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 				end)
 
 				AddConnection(Click.MouseLeave, function()
-					TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second}):Play()
+					TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
 				end)
 
 				AddConnection(Click.MouseButton1Up, function()
-					TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 				end)
 
 				AddConnection(Click.MouseButton1Down, function()
-					TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 6, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 6, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 6)}):Play()
+					TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
 				end)
 
 				function Bind:Set(Key)
@@ -1360,7 +1359,7 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 
 				Bind:Set(BindConfig.Default)
 				if BindConfig.Flag then				
-					FeHariHubLib.Flags[BindConfig.Flag] = Bind
+					OrionLib.Flags[BindConfig.Flag] = Bind
 				end
 				return Bind
 			end  
@@ -1427,20 +1426,20 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 				TextboxActual.Text = TextboxConfig.Default
 
 				AddConnection(Click.MouseEnter, function()
-					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 				end)
 
 				AddConnection(Click.MouseLeave, function()
-					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second}):Play()
+					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = OrionLib.Themes[OrionLib.SelectedTheme].Second}):Play()
 				end)
 
 				AddConnection(Click.MouseButton1Up, function()
-					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 3, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 3, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 3)}):Play()
 					TextboxActual:CaptureFocus()
 				end)
 
 				AddConnection(Click.MouseButton1Down, function()
-					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.R * 255 + 6, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.G * 255 + 6, FeHariHubLib.Themes[FeHariHubLib.SelectedTheme].Second.B * 255 + 6)}):Play()
+					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
 				end)
 			end 
 			function ElementFunction:AddColorpicker(ColorpickerConfig)
@@ -1624,7 +1623,7 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 
 				Colorpicker:Set(Colorpicker.Value)
 				if ColorpickerConfig.Flag then				
-					FeHariHubLib.Flags[ColorpickerConfig.Flag] = Colorpicker
+					OrionLib.Flags[ColorpickerConfig.Flag] = Colorpicker
 				end
 				return Colorpicker
 			end  
@@ -1729,7 +1728,7 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 	--				})
 	--			})
 	--		end
-	--		FeHariHubLib:MakeNotification({
+	--		OrionLib:MakeNotification({
 	--			Name = "UI Library Available",
 	--			Content = "New UI Library Available - Joining Discord (#announcements)",
 	--			Time = 8
@@ -1759,8 +1758,8 @@ function FeHariHubLib:MakeWindow(WindowConfig)
 	return TabFunction
 end   
 
-function FeHariHubLib:Destroy()
-	FeHariHub:Destroy()
+function OrionLib:Destroy()
+	Orion:Destroy()
 end
 
-return FeHariHubLib
+return OrionLib
