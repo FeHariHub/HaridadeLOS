@@ -193,15 +193,15 @@ end
 
 
 
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/FeHariHub/HaridadeLOS/main/Scripts.lua')))()
-local Window = OrionLib:MakeWindow({Name = "FeHariV7 Hub | Lendas Da Velocidade ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "FeHariV7 Hub| Lendas Da Velocidade ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
 
 
 OrionLib:MakeNotification({
-	Name = "Bem-Vindo(a)",
-	Content = "Script Carregado com Sucesso.",
-	Image = "rbxassetid://111462827396918",
-	Time = 5
+	Name = "Credits",
+	Content = "Script made by: 312ing#2389",
+	Image = "rbxassetid://4483345998",
+	Time = 30
 })
 
 
