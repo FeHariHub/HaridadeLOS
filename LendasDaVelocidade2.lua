@@ -86,7 +86,7 @@ function orbCollecter()
                 game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", orb[1], orb[2])
             end
             -- Minimizar o tempo de espera para aumentar a velocidade
-            task.wait(200) -- Ajuste se necessário
+            task.wait() -- Ajuste se necessário
         end
     end)
 end
@@ -221,7 +221,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 AutoFarm:AddToggle({
-	Name = "Collect Orbs",
+	Name = "Collect Orbs1",
 	Default = false,
 	Callback = function(Value)
 		orbCollect = Value
