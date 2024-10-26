@@ -69,23 +69,27 @@ end
 function orbCollecter()
     spawn(function()
         while orbCollect do
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "Legends Highway")
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "Legends Highway")
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Gem", "Legends Highway")
-
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "Snow City")
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "Snow City")
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Gem", "Snow City")
-
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "City")
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "City")
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Gem", "City")
-
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "Magma City")
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Gem", "Magma City")
+            -- Coleta orbs com um pequeno intervalo para evitar travamentos
+            for _, orb in pairs({
+                {"Red Orb", "Legends Highway"},
+                {"Yellow Orb", "Legends Highway"},
+                {"Gem", "Legends Highway"},
+                {"Red Orb", "Snow City"},
+                {"Yellow Orb", "Snow City"},
+                {"Gem", "Snow City"},
+                {"Red Orb", "City"},
+                {"Yellow Orb", "City"},
+                {"Gem", "City"},
+                {"Red Orb", "Magma City"},
+                {"Gem", "Magma City"}
+            }) do
+                game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", orb[1], orb[2])
+                task.wait(0.05) -- Ajuste o tempo de espera se necessário
+            end
         end
     end)
 end
+
 
 
 
@@ -216,7 +220,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 AutoFarm:AddToggle({
-	Name = "Collect Orbs (automatic)",
+	Name = "Collect Orbs",
 	Default = false,
 	Callback = function(Value)
 		orbCollect = Value
