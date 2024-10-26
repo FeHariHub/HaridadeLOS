@@ -219,7 +219,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 AutoFarm:AddToggle({
-	Name = "Collect Orbs1",
+	Name = "Collect Orbs",
 	Default = false,
 	Callback = function(Value)
 		orbCollect = Value
