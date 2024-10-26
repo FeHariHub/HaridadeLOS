@@ -84,7 +84,6 @@ function orbCollecter()
             game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Gem", "City")
 
             game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "Magma City")
-            game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "Magma City")
             game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Gem", "Magma City")
         end
     end)
@@ -200,14 +199,14 @@ local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speed ⚡"
 OrionLib:MakeNotification({
 	Name = "Demonnic Hub",
 	Content = "discord.gg/uydz6pZWMk",
-	Image = "rbxassetid://101796603448640",
+	Image = "rbxassetid://101951842185056",
 	Time = 20
 })
 
 OrionLib:MakeNotification({
 	Name = "Credits",
 	Content = "Script made by: Demonnic_Alexg",
-	Image = "rbxassetid://4483345998",
+	Image = "rbxassetid://71506531582407",
 	Time = 20
 })
 
