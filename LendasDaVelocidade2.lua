@@ -69,7 +69,6 @@ end
 function orbCollecter()
     spawn(function()
         while orbCollect do
-            -- Coleta orbs com um pequeno intervalo para evitar travamentos
             for _, orb in pairs({
                 {"Red Orb", "Legends Highway"},
                 {"Yellow Orb", "Legends Highway"},
@@ -83,9 +82,11 @@ function orbCollecter()
                 {"Red Orb", "Magma City"},
                 {"Gem", "Magma City"}
             }) do
+                -- Chamadas simultâneas
                 game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", orb[1], orb[2])
-                task.wait(0.00) -- Ajuste o tempo de espera se necessário
             end
+            -- Minimizar o tempo de espera para aumentar a velocidade
+            task.wait(0.001) -- Ajuste se necessário
         end
     end)
 end
@@ -220,7 +221,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 AutoFarm:AddToggle({
-	Name = "Collect Orbs (1)",
+	Name = "Collect Orbs",
 	Default = false,
 	Callback = function(Value)
 		orbCollect = Value
