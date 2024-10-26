@@ -198,16 +198,23 @@ local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speed ⚡"
 
 
 OrionLib:MakeNotification({
+	Name = "Demonnic Hub",
+	Content = "discord.gg/uydz6pZWMk",
+	Image = "rbxassetid://101796603448640",
+	Time = 20
+})
+
+OrionLib:MakeNotification({
 	Name = "Credits",
-	Content = "Script made by: 312ing#2389",
+	Content = "Script made by: Demonnic_Alexg",
 	Image = "rbxassetid://4483345998",
-	Time = 30
+	Time = 20
 })
 
 
 local AutoFarm = Window:MakeTab({
-	Name = "Farming",
-	Icon = "rbxassetid://4483345998",
+	Name = "Main",
+	Icon = "rbxassetid://100789040568622",
 	PremiumOnly = false
 })
 
@@ -248,16 +255,23 @@ AutoFarm:AddToggle({
 })
 
 
-local Teleports = Window:MakeTab({
+local AutoFarm = Window:MakeTab({
 	Name = "Teleports",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
 
 local AutoFarm = Window:MakeTab({
-	Name = "Extras",
+	Name = "Extra",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
+})
+
+AutoFarm:AddButton({
+    Name = "Suicid",
+    Callback = function()
+        LocalPlayer.Character:WaitForChild("Humanoid").Health = 0
+    end    
 })
 
 AutoFarm:AddButton({
