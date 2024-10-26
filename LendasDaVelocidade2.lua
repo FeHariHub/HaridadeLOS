@@ -81,6 +81,10 @@ function orbCollecter()
                 {"Yellow Orb", "City"},
                 {"Gem", "City"},
                 {"Red Orb", "Magma City"},
+		{"Red Orb", "Magma City"},
+		{"Red Orb", "Magma City"},
+		{"Red Orb", "Magma City"},
+		{"Red Orb", "Magma City"},				
 		{"Red Orb", "Magma City"},				
                 {"Gem", "Magma City"}
             }) do
