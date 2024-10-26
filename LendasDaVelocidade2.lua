@@ -212,7 +212,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 AutoFarm:AddToggle({
-	Name = "Orb Collecter *may cause issues*",
+	Name = "Collect Orbs (automatic)",
 	Default = false,
 	Callback = function(Value)
 		orbCollect = Value
@@ -230,7 +230,7 @@ AutoFarm:AddToggle({
 })
 
 AutoFarm:AddToggle({
-	Name = "Hoop Bring",
+	Name = "Hoop V1",
 	Default = false,
 	Callback = function(Value)
 		hoopTP = Value
@@ -239,7 +239,7 @@ AutoFarm:AddToggle({
 })
 
 AutoFarm:AddToggle({
-	Name = "Auto Best Pet *drains gems*",
+	Name = "Auto Best Pet",
 	Default = false,
 	Callback = function(Value)
 		eggOpen = Value
@@ -254,46 +254,20 @@ local Teleports = Window:MakeTab({
 	PremiumOnly = false
 })
 
-local Misc = Window:MakeTab({
-	Name = "Misc",
+local AutoFarm = Window:MakeTab({
+	Name = "Extras",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
 
-Misc:AddSlider({
-	Name = "Speed",
-	Min = 150,
-	Max = 10000,
-	Default = 1000,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "ws",
-	Callback = function(Value)
-		setSpeed(Value)
-	end         
-})
-
-Misc:AddSlider({
-	Name = "Jump Height",
-	Min = 50,
-	Max = 1500,
-	Default = 200,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "jp",
-	Callback = function(Value)
-		setJump(Value)
-	end    
-})
-
-Misc:AddButton({
+AutoFarm:AddButton({
 	Name = "Remove Race Start Barriers",
 	Callback = function()
       	deleteBarrier()
   	end    
 })
 
-Misc:AddButton({
+AutoFarm:AddButton({
 	Name = "Re-join",
 	Callback = function()
         game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
