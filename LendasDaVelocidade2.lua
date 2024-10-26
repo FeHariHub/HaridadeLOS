@@ -69,6 +69,7 @@ end
 function orbCollecter()
     spawn(function()
         while orbCollect do
+            -- Coleta orbs em bloco
             for _, orb in pairs({
                 {"Red Orb", "Legends Highway"},
                 {"Yellow Orb", "Legends Highway"},
@@ -84,9 +85,13 @@ function orbCollecter()
             }) do
                 game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", orb[1], orb[2])
             end
+            
+            -- Espera extremamente curta
+            task.wait(0.0000000000000001) -- Ajustado para um valor muito pequeno
         end
     end)
 end
+
 
 
 
@@ -219,7 +224,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 AutoFarm:AddToggle({
-	Name = "Collect Orbs",
+	Name = "Collect Orbs 1",
 	Default = false,
 	Callback = function(Value)
 		orbCollect = Value
