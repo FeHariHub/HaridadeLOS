@@ -68,9 +68,7 @@ end
 --Orb Remote Spam
 function orbCollecter()
     spawn(function()
-        while task.wait() do
-            if not orbCollect then break end
-
+        while orbCollect do
             game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "Legends Highway")
             game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "Legends Highway")
             game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", "Gem", "Legends Highway")
@@ -227,15 +225,6 @@ AutoFarm:AddToggle({
 })
 
 AutoFarm:AddToggle({
-	Name = "Auto Rebirth",
-	Default = false,
-	Callback = function(Value)
-		autoRebirth = Value
-        autoRebirther()
-	end    
-})
-
-AutoFarm:AddToggle({
 	Name = "Hoop V1",
 	Default = false,
 	Callback = function(Value)
@@ -256,8 +245,97 @@ AutoFarm:AddToggle({
 
 local AutoFarm = Window:MakeTab({
 	Name = "Teleports",
-	Icon = "rbxassetid://4483345998",
+	Icon = "rbxassetid://103168823763561",
 	PremiumOnly = false
+})
+
+local Section = AutoFarm:AddSection({
+	Name = "City Teleports"
+})
+
+
+FarmTab:AddDropdown({
+	Name = "Teleports",
+	Default = nil,
+	Options = {"Main City", "Snow City", "Magma City", "Legends Highway"},
+	Callback = function(Value)
+		SelectCity(Value)
+	end    
+})
+
+local AutoFarm = Window:MakeTab({
+	Name = "Farm",
+	Icon = "rbxassetid://78744214847458",
+	PremiumOnly = false
+})
+
+local Section = AutoFarm:AddSection({
+	Name = "Hoop Farm"
+})
+
+AutoFarm:AddToggle({
+	Name = "Hoops V1",
+	Default = false,
+	Callback = function(Value)
+		getgenv().Hoop = Value
+        while Hoop do
+            HoopFarm()
+            task.wait()
+        end
+	end    
+})
+
+AutoFarm:AddToggle({
+	Name = "Hoops V2",
+	Default = false,
+	Callback = function(Value)
+		getgenv().HoopV2 = Value
+        while HoopV2 do
+            HoopFarmV2()
+            task.wait()
+        end
+	end    
+})
+
+local AutoFarm = Window:MakeTab({
+	Name = "Auto Rebirth",
+	Icon = "rbxassetid://124658295933505",
+	PremiumOnly = false
+})
+
+AutoFarm:AddToggle({
+	Name = "Auto Rebirth",
+	Default = false,
+	Callback = function(Value)
+		autoRebirth = Value
+        autoRebirther()
+	end    
+})
+
+local AutoFarm = Window:MakeTab({
+	Name = "Race",
+	Icon = "rbxassetid://97860628277392",
+	PremiumOnly = false
+})
+
+local Section = AutoFarm:AddSection({
+	Name = "Auto Race"
+})
+
+FarmTab:AddToggle({
+    Name = "Auto Race",
+    Default = false,
+    Callback = function(Value)
+        ToggleAutoRaces(Value)
+    end    
+})
+
+FarmTab:AddToggle({
+    Name = "Race Block (BETA)",
+    Default = false,
+    Callback = function(Value)
+        ToggleAutoRacesSolo(Value)
+    end    
 })
 
 local AutoFarm = Window:MakeTab({
@@ -281,7 +359,7 @@ AutoFarm:AddButton({
 })
 
 AutoFarm:AddButton({
-	Name = "Re-join",
+	Name = "Rejoin Game",
 	Callback = function()
         game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
   	end    
