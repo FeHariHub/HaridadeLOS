@@ -84,7 +84,7 @@ function orbCollecter()
                 {"Gem", "Magma City"}
             }) do
                 game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", orb[1], orb[2])
-                task.wait(0.05) -- Ajuste o tempo de espera se necessário
+                task.wait(0.00) -- Ajuste o tempo de espera se necessário
             end
         end
     end)
@@ -220,7 +220,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 AutoFarm:AddToggle({
-	Name = "Collect Orbs",
+	Name = "Collect Orbs (1)",
 	Default = false,
 	Callback = function(Value)
 		orbCollect = Value
