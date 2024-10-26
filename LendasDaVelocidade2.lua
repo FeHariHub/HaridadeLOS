@@ -82,14 +82,12 @@ function orbCollecter()
                 {"Red Orb", "Magma City"},
                 {"Gem", "Magma City"}
             }) do
-                -- Chamadas simultâneas
                 game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", orb[1], orb[2])
             end
-            -- Minimizar o tempo de espera para aumentar a velocidade
-            task.wait() -- Ajuste se necessário
         end
     end)
 end
+
 
 
 
