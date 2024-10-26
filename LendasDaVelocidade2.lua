@@ -87,7 +87,7 @@ function orbCollecter()
             end
             
             -- Espera extremamente curta
-            task.wait(0.0000000000000001) -- Ajustado para um valor muito pequeno
+            task.wait(0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001) -- Ajustado para um valor muito pequeno
         end
     end)
 end
@@ -224,7 +224,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 AutoFarm:AddToggle({
-	Name = "Collect Orbs 1",
+	Name = "Collect Orbs",
 	Default = false,
 	Callback = function(Value)
 		orbCollect = Value
