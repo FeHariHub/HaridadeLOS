@@ -88,7 +88,7 @@ function orbCollecter()
             end
             
             -- Espera extremamente curta
-            task.wait(0.0) -- Ajustado para um valor muito pequeno
+            task.wait(0) -- Ajustado para um valor muito pequeno
         end
     end)
 end
