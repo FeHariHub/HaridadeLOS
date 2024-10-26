@@ -81,13 +81,14 @@ function orbCollecter()
                 {"Yellow Orb", "City"},
                 {"Gem", "City"},
                 {"Red Orb", "Magma City"},
+		{"Red Orb", "Magma City"},				
                 {"Gem", "Magma City"}
             }) do
                 game:GetService("ReplicatedStorage").rEvents.orbEvent:FireServer("collectOrb", orb[1], orb[2])
             end
             
             -- Espera extremamente curta
-            task.wait(0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001) -- Ajustado para um valor muito pequeno
+            task.wait(0.0) -- Ajustado para um valor muito pequeno
         end
     end)
 end
@@ -199,7 +200,7 @@ end
 
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speeed ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
+local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speed ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
 
 
 OrionLib:MakeNotification({
