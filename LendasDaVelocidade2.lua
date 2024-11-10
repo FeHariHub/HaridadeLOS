@@ -204,7 +204,7 @@ end
 
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speed ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
+local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speeed ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
 
 
 OrionLib:MakeNotification({
@@ -234,15 +234,6 @@ AutoFarm:AddToggle({
 	Callback = function(Value)
 		orbCollect = Value
         orbCollecter()
-	end    
-})
-
-AutoFarm:AddToggle({
-	Name = "Hoop V1",
-	Default = false,
-	Callback = function(Value)
-		hoopTP = Value
-        hoopTPer()
 	end    
 })
 
@@ -332,7 +323,7 @@ local AutoFarm = Window:MakeTab({
 })
 
 local Section = AutoFarm:AddSection({
-	Name = "Auto Race"
+	Name = "Race"
 })
 
 FarmTab:AddToggle({
@@ -344,38 +335,12 @@ FarmTab:AddToggle({
 })
 
 FarmTab:AddToggle({
-    Name = "Race Block (BETA)",
+    Name = "Auto Fill (BETA)",
     Default = false,
     Callback = function(Value)
         ToggleAutoRacesSolo(Value)
     end    
 })
 
-local AutoFarm = Window:MakeTab({
-	Name = "Extra",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
-})
-
-AutoFarm:AddButton({
-    Name = "Suicid",
-    Callback = function()
-        LocalPlayer.Character:WaitForChild("Humanoid").Health = 0
-    end    
-})
-
-AutoFarm:AddButton({
-	Name = "Remove Race Start Barriers",
-	Callback = function()
-      	deleteBarrier()
-  	end    
-})
-
-AutoFarm:AddButton({
-	Name = "Rejoin Game",
-	Callback = function()
-        game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
-  	end    
-})
 
  OrionLib:Init()
