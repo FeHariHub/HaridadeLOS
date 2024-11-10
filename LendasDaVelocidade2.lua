@@ -204,7 +204,7 @@ end
 
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speeed ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
+local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speed ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
 
 
 OrionLib:MakeNotification({
@@ -246,74 +246,10 @@ AutoFarm:AddToggle({
 	end    
 })
 
-
-local AutoFarm = Window:MakeTab({
-	Name = "Teleports",
-	Icon = "rbxassetid://103168823763561",
-	PremiumOnly = false
-})
-
-local Section = AutoFarm:AddSection({
-	Name = "City Teleports"
-})
-
-
-FarmTab:AddDropdown({
-	Name = "Teleports",
-	Default = nil,
-	Options = {"Main City", "Snow City", "Magma City", "Legends Highway"},
-	Callback = function(Value)
-		SelectCity(Value)
-	end    
-})
-
 local AutoFarm = Window:MakeTab({
 	Name = "Farm",
 	Icon = "rbxassetid://78744214847458",
 	PremiumOnly = false
-})
-
-local Section = AutoFarm:AddSection({
-	Name = "Hoop Farm"
-})
-
-AutoFarm:AddToggle({
-	Name = "Hoops V1",
-	Default = false,
-	Callback = function(Value)
-		getgenv().Hoop = Value
-        while Hoop do
-            HoopFarm()
-            task.wait()
-        end
-	end    
-})
-
-AutoFarm:AddToggle({
-	Name = "Hoops V2",
-	Default = false,
-	Callback = function(Value)
-		getgenv().HoopV2 = Value
-        while HoopV2 do
-            HoopFarmV2()
-            task.wait()
-        end
-	end    
-})
-
-local AutoFarm = Window:MakeTab({
-	Name = "Auto Rebirth",
-	Icon = "rbxassetid://124658295933505",
-	PremiumOnly = false
-})
-
-AutoFarm:AddToggle({
-	Name = "Auto Rebirth",
-	Default = false,
-	Callback = function(Value)
-		autoRebirth = Value
-        autoRebirther()
-	end    
 })
 
 local AutoFarm = Window:MakeTab({
