@@ -686,6 +686,8 @@ game.ReplicatedStorage.rEvents.orbEvent:FireServer("cogame.ReplicatedStorage.rEv
 		game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb","Red Orb","Magma City")
 		game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb","Red Orb","Magma City")
 		game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb","Red Orb","Magma City")
+	     end
+        end)
 
 
 --Anti AFK
