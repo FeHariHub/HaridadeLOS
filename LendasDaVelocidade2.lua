@@ -204,7 +204,7 @@ end
 
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "Demonnic Hub | Legends Of Speed ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
+local Window = OrionLib:MakeWindow({Name = "Demonic Hub | Legends Of Speed ⚡", HidePremium = false, IntroEnabled = false, SaveConfig = true, ConfigFolder = "LoSH"})
 
 
 OrionLib:MakeNotification({
@@ -262,7 +262,7 @@ local Section = AutoFarm:AddSection({
 	Name = "Race"
 })
 
-FarmTab:AddToggle({
+AutoFarm:AddToggle({
     Name = "Auto Race",
     Default = false,
     Callback = function(Value)
@@ -270,7 +270,7 @@ FarmTab:AddToggle({
     end    
 })
 
-FarmTab:AddToggle({
+AutoFarm:AddToggle({
     Name = "Auto Fill (BETA)",
     Default = false,
     Callback = function(Value)
